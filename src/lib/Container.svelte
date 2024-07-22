@@ -1,7 +1,28 @@
+<script>
+  import { onMount } from 'svelte';
 
+  onMount(() => {
+    update();
+  });
+
+  const update = () => {
+    const {x, y} = document.getElementsByClassName('point')[0].getBoundingClientRect();
+
+    window.localStorage.setItem('data', JSON.stringify({
+      windows: [{
+        x,
+        y
+      }]
+    }));
+  }
+</script>
+
+<svelte:window 
+  on:resize={update}
+/>
 
 <div class="container">
-  <button class="button">1</button>
+  <button class="point">1</button>
 </div>
 
 <style>
@@ -20,7 +41,7 @@
     z-index: -1;
   }
 
-  .container > .button {
+  .container > .point {
     width: 32px;
     height: 32px;
   }
