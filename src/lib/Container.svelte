@@ -1,24 +1,62 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
 
+  let tabId: number;
+
   onMount(() => {
+    tabId = sessionStorage.tabID && 
+            sessionStorage.closedLastTab !== '2' ? 
+            sessionStorage.tabID : 
+            sessionStorage.tabID = Math.random();
+
+    sessionStorage.closedLastTab = '2';
+
     update();
   });
 
   const update = () => {
     const {x, y} = document.getElementsByClassName('point')[0].getBoundingClientRect();
+    const data = localStorage.getItem('data');
 
-    window.localStorage.setItem('data', JSON.stringify({
-      windows: [{
-        x,
-        y
-      }]
-    }));
+    if (data) {
+      localStorage.setItem('data', JSON.stringify({
+        ...JSON.parse(data),
+        [tabId]: {
+          x,
+          y,
+        }
+      }));
+    } else {
+      localStorage.setItem('data', JSON.stringify({
+        [tabId]: {
+          x,
+          y,
+        }
+      }));
+    }
+  }
+
+  const unload = () => {
+    sessionStorage.closedLastTab = '1';
+
+    const data = localStorage.getItem('data');
+
+    if (data) {
+      localStorage.setItem('data', JSON.stringify({
+        ...Object.keys(JSON.parse(data)).filter(key => key !== tabId.toString()).reduce((acc: {
+          [key: string]: object;
+        }, key) => {
+            acc[key] = JSON.parse(data)[key];
+            return acc;
+        }, {})
+      }));
+    }
   }
 </script>
 
 <svelte:window 
   on:resize={update}
+  on:beforeunload={unload}
 />
 
 <div class="container">
