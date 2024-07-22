@@ -4,7 +4,7 @@
 
 <main>
   <header class="header">
-    <p class="header title">connected</p>
+    <p class="header title">./connected</p>
     <div class="header group">
       <button>Add New Window</button>
       <button>Github</button>
