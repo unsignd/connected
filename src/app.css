@@ -11,9 +11,12 @@ button {
 
   font-weight: 600;
 
+  color: #000;
   background-color: transparent;
 
   border: 2px solid #000;
+
+  transition: scale 100ms ease-in-out;
 
   outline: 0;
   text-decoration: 0;
@@ -21,4 +24,21 @@ button {
 }
 
 button:hover {
+  color: #fff;
+  background-color: #000;
+}
+
+button:active {
+  scale: 0.92;
+}
+
+canvas {
+  width: 100vw;
+  height: 100vh;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  z-index: -1;
 }
