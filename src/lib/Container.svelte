@@ -2,7 +2,20 @@
   import { onMount } from 'svelte';
 
   let tabId: number;
-  let data: string;
+  let data: {
+    [tabId: string]: {
+      window: {
+        x: number,
+        y: number
+      },
+      point: {
+        x: number,
+        y: number
+      }
+    }
+  } = {};
+
+  let interval: NodeJS.Timer;
 
   onMount(() => {
     tabId = sessionStorage.tabID && 
@@ -13,6 +26,15 @@
     sessionStorage.closedLastTab = '2';
 
     update();
+
+    interval = setInterval(() => {
+      if (
+        window.screenX !== data[tabId.toString()].window.x ||
+        window.screenY !== data[tabId.toString()].window.y
+      ) {
+        update();
+      }
+    }, 50);
   });
 
   const update = () => {
@@ -21,7 +43,7 @@
 
     if (data) {
       localStorage.setItem('data', JSON.stringify({
-        ...JSON.parse(data),
+        ...data,
         [tabId]: {
           window: {
             x: window.screenX,
@@ -56,23 +78,27 @@
   }
 
   const load = () => {
-    data = localStorage.getItem('data') ?? '{}';
+    data = JSON.parse(localStorage.getItem('data') ?? '{}');
   }
 
   const unload = () => {
     sessionStorage.closedLastTab = '1';
 
-    const data = localStorage.getItem('data') ?? '{}';
+    const data = JSON.parse(localStorage.getItem('data') ?? '{}');
 
     if (data) {
       localStorage.setItem('data', JSON.stringify({
-        ...Object.keys(JSON.parse(data)).filter(key => key !== tabId.toString()).reduce((acc: {
+        ...Object.keys(data).filter(key => key !== tabId.toString()).reduce((acc: {
           [key: string]: object;
         }, key) => {
-            acc[key] = JSON.parse(data)[key];
+            acc[key] = data[key];
             return acc;
         }, {})
       }));
+    }
+
+    if (interval) {
+      clearInterval(interval);
     }
   }
 </script>
@@ -83,7 +109,7 @@
 />
 
 <div class="container">
-  <button class="point">{Object.keys(JSON.parse(data ?? '{}')).findIndex(key => key === tabId.toString())}</button>
+  <button class="point">{Object.keys(data).findIndex(key => key === tabId.toString())}</button>
 </div>
 
 <style>
