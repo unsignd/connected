@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import Canvas from './Canvas.svelte';
 
   let tabId: number;
   let data: {
@@ -52,8 +53,8 @@
             height: window.innerHeight,
           },
           point: {
-            x,
-            y
+            x: x + 16,
+            y: y + 16
           }
         }
       }));
@@ -110,6 +111,9 @@
 
 <div class="container">
   <button class="point">{Object.keys(data).findIndex(key => key === tabId.toString())}</button>
+  {#if tabId && data}
+  <Canvas tabId={tabId} data={data}/>
+  {/if}
 </div>
 
 <style>
