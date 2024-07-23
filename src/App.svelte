@@ -7,7 +7,7 @@
     <p class="title">./connected</p>
     <div class="group">
       <button>Add New Window</button>
-      <button>Github</button>
+      <button>Clear Data</button>
     </div>
   </header>
   <Container />
