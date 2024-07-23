@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
 
   let tabId: number;
+  let data: string;
 
   onMount(() => {
     tabId = sessionStorage.tabID && 
@@ -16,30 +17,52 @@
 
   const update = () => {
     const {x, y} = document.getElementsByClassName('point')[0].getBoundingClientRect();
-    const data = localStorage.getItem('data');
+    load();
 
     if (data) {
       localStorage.setItem('data', JSON.stringify({
         ...JSON.parse(data),
         [tabId]: {
-          x,
-          y,
+          window: {
+            x: window.screenX,
+            y: window.screenY,
+            width: window.innerWidth,
+            height: window.innerHeight,
+          },
+          point: {
+            x,
+            y
+          }
         }
       }));
     } else {
       localStorage.setItem('data', JSON.stringify({
         [tabId]: {
-          x,
-          y,
+          window: {
+            x: window.screenX,
+            y: window.screenY,
+            width: window.innerWidth,
+            height: window.innerHeight,
+          },
+          point: {
+            x,
+            y
+          }
         }
       }));
     }
+
+    load();
+  }
+
+  const load = () => {
+    data = localStorage.getItem('data') ?? '{}';
   }
 
   const unload = () => {
     sessionStorage.closedLastTab = '1';
 
-    const data = localStorage.getItem('data');
+    const data = localStorage.getItem('data') ?? '{}';
 
     if (data) {
       localStorage.setItem('data', JSON.stringify({
@@ -60,7 +83,7 @@
 />
 
 <div class="container">
-  <button class="point">1</button>
+  <button class="point">{Object.keys(JSON.parse(data ?? '{}')).findIndex(key => key === tabId.toString())}</button>
 </div>
 
 <style>
