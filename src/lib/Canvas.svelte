@@ -14,6 +14,10 @@
       }
     }
   };
+  export let points: {
+    x: number,
+    y: number,
+  }[];
 
   let canvas: HTMLCanvasElement;
   let context: CanvasRenderingContext2D;
@@ -39,10 +43,14 @@
     context.fillStyle = "#000";
     context.lineWidth = 8;
     context.clearRect(0, 0, w * 4, h * 4);
-    context.beginPath();
-    context.moveTo(data[tabId.toString()].point.x * 4, data[tabId.toString()].point.y * 4);
-    context.lineTo(0, 0);
-    context.stroke();
+
+    points.forEach(point => {
+      context.beginPath();
+      context.moveTo(data[tabId.toString()].point.x * 4, data[tabId.toString()].point.y * 4);
+      context.lineTo((point.x - data[tabId.toString()].window.x) * 4, (point.y - data[tabId.toString()].window.y) * 4);
+      context.stroke();
+      context.closePath();
+    })
 	};
 </script>
 

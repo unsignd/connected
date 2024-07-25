@@ -7,14 +7,18 @@
     [tabId: string]: {
       window: {
         x: number,
-        y: number
+        y: number,
       },
       point: {
         x: number,
-        y: number
+        y: number,
       }
     }
   } = {};
+  let points: {
+    x: number,
+    y: number,
+  }[] = [];
 
   let interval: NodeJS.Timer;
 
@@ -29,12 +33,12 @@
     update();
 
     interval = setInterval(() => {
-      if (
-        window.screenX !== data[tabId.toString()].window.x ||
-        window.screenY !== data[tabId.toString()].window.y
-      ) {
-        update();
-      }
+      update();
+
+      points = Object.keys(data).filter(key => key !== tabId.toString()).map((key) => ({
+        x: data[key].point.x + data[key].window.x,
+        y: data[key].point.y + data[key].window.y,
+      }));
     }, 50);
   });
 
@@ -54,7 +58,7 @@
           },
           point: {
             x: x + 16,
-            y: y + 16
+            y: y + 16,
           }
         }
       }));
@@ -69,7 +73,7 @@
           },
           point: {
             x,
-            y
+            y,
           }
         }
       }));
@@ -112,7 +116,7 @@
 <div class="container">
   <button class="point">{Object.keys(data).findIndex(key => key === tabId.toString())}</button>
   {#if tabId && data}
-  <Canvas tabId={tabId} data={data}/>
+  <Canvas tabId={tabId} data={data} points={points}/>
   {/if}
 </div>
 
