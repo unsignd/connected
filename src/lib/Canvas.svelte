@@ -14,10 +14,6 @@
       }
     }
   };
-  export let points: {
-    x: number,
-    y: number,
-  }[];
 
   let canvas: HTMLCanvasElement;
   let context: CanvasRenderingContext2D;
@@ -25,11 +21,27 @@
       l: number,
       w: number,
       h: number;
+  let points: {
+    x: number,
+    y: number,
+  }[] = [];
+
+  let interval: NodeJS.Timer;
 
   onMount(() => {
 		context = canvas.getContext('2d')!;
 		
+    clear();
 		handleSize();
+
+    interval = setInterval(() => {
+      points = Object.keys(data).filter(key => key !== tabId.toString()).map(key => ({
+        x: data[key].point.x + data[key].window.x,
+        y: data[key].point.y + data[key].window.y,
+      }))
+
+      draw();
+    }, 50);
 	});
 
   const handleSize = () => {
@@ -38,11 +50,17 @@
 		l = left;
     w = width;
     h = height;
+	};
+
+  const clear = () => {
+    context.clearRect(0, 0, w * 4, h * 4);
+  }
+
+  const draw = () => {
     canvas.width = w * 4;
     canvas.height = h * 4;
     context.fillStyle = "#000";
     context.lineWidth = 8;
-    context.clearRect(0, 0, w * 4, h * 4);
 
     points.forEach(point => {
       context.beginPath();
@@ -50,11 +68,24 @@
       context.lineTo((point.x - data[tabId.toString()].window.x) * 4, (point.y - data[tabId.toString()].window.y) * 4);
       context.stroke();
       context.closePath();
-    })
-	};
+    });
+  }
+
+  const unload = () => {
+    if (interval) {
+      clearInterval(interval);
+    }
+  }
 </script>
 
-<svelte:window on:resize={handleSize}/>
+<svelte:window
+  on:resize={() => {
+    clear();
+    handleSize();
+    draw();
+  }}
+  on:beforeunload={unload}
+/>
 
 <canvas class="canvas" bind:this={canvas} />
 
