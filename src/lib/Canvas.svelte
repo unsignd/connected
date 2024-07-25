@@ -17,6 +17,7 @@
 
   let canvas: HTMLCanvasElement;
   let context: CanvasRenderingContext2D;
+  
   let t: number,
       l: number,
       w: number,
@@ -31,15 +32,21 @@
   onMount(() => {
 		context = canvas.getContext('2d')!;
 		
-    clear();
-		handleSize();
+    handleSize();
 
     interval = setInterval(() => {
-      points = Object.keys(data).filter(key => key !== tabId.toString()).map(key => ({
-        x: data[key].point.x + data[key].window.x,
-        y: data[key].point.y + data[key].window.y,
-      }))
+      points = Object.keys(data).filter(key => key !== tabId.toString()).map(key => {
+        console.log(key);
+        console.log(tabId.toString());
+        console.log('-')
 
+        return ({
+          x: data[key].point.x + data[key].window.x,
+          y: data[key].point.y + data[key].window.y,
+        });
+      })
+
+      clear();
       draw();
     }, 50);
 	});
@@ -80,8 +87,8 @@
 
 <svelte:window
   on:resize={() => {
-    clear();
     handleSize();
+    clear();
     draw();
   }}
   on:beforeunload={unload}
