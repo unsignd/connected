@@ -6,13 +6,21 @@
     [tabId: string]: {
       window: {
         x: number,
-        y: number
+        y: number,
+        width: number,
+        height: number,
       },
       point: {
         x: number,
-        y: number
-      }
+        y: number,
+      },
     }
+  };
+  export let points: {
+    [tabId: string]: {
+      x: number,
+      y: number,
+    },
   };
 
   let canvas: HTMLCanvasElement;
@@ -22,10 +30,6 @@
       l: number,
       w: number,
       h: number;
-  let points: {
-    x: number,
-    y: number,
-  }[] = [];
 
   let interval: NodeJS.Timer;
 
@@ -35,17 +39,6 @@
     handleSize();
 
     interval = setInterval(() => {
-      points = Object.keys(data).filter(key => key !== tabId.toString()).map(key => {
-        console.log(key);
-        console.log(tabId.toString());
-        console.log('-')
-
-        return ({
-          x: data[key].point.x + data[key].window.x,
-          y: data[key].point.y + data[key].window.y,
-        });
-      })
-
       clear();
       draw();
     }, 50);
@@ -69,10 +62,10 @@
     context.fillStyle = "#000";
     context.lineWidth = 8;
 
-    points.forEach(point => {
+    Object.keys(points).forEach(key => {
       context.beginPath();
       context.moveTo(data[tabId.toString()].point.x * 4, data[tabId.toString()].point.y * 4);
-      context.lineTo((point.x - data[tabId.toString()].window.x) * 4, (point.y - data[tabId.toString()].window.y) * 4);
+      context.lineTo((points[key].x - data[tabId.toString()].window.x) * 4, (points[key].y - data[tabId.toString()].window.y) * 4);
       context.stroke();
       context.closePath();
     });

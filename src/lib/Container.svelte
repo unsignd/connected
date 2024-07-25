@@ -7,13 +7,21 @@
     [tabId: string]: {
       window: {
         x: number,
-        y: number
+        y: number,
+        width: number,
+        height: number,
       },
       point: {
         x: number,
-        y: number
+        y: number,
       },
     }
+  } = {};
+  let points: {
+    [tabId: string]: {
+      x: number,
+      y: number,
+    },
   } = {};
 
   let isDragging: boolean = false;
@@ -36,6 +44,16 @@
     sessionStorage.closedLastTab = '2';
 
     interval = setInterval(() => {
+      points = Object.keys(data)
+      .filter(key => key !== tabId.toString())
+      .reduce((acc, key) => {
+        acc[key] = {
+          x: data[key].point.x + data[key].window.x,
+          y: data[key].point.y + data[key].window.y,
+        };
+        return acc;
+      }, {} as { [key: string]: { x: number, y: number } });
+
       update();
     }, 50);
   });
@@ -123,11 +141,13 @@
 
 <div class="container">
   <button class="point" on:mousedown={() => isDragging = true} on:mouseup={() => isDragging = false} style="--x: {dragPosition.x ? dragPosition.x + 'px' : '50%'}; --y: {dragPosition.y ? dragPosition.y + 'px' : '50%'}">{Object.keys(data).findIndex(key => key === tabId.toString())}</button>
+  {#each Object.keys(points).filter(key => points[key].x >= data[tabId].window.x && points[key].x < data[tabId].window.x + data[tabId].window.width) as key}
+    <div class="other">{Object.keys(data).findIndex(key => key === tabId.toString())}</div>
+  {/each}
   {#if tabId && data}
-  <Canvas bind:tabId={tabId} bind:data={data}/>
+    <Canvas bind:tabId={tabId} bind:data={data} bind:points={points}/>
   {/if}
 </div>
-{JSON.stringify(isDragging)}
 
 <style>
   .container {
@@ -148,6 +168,24 @@
     position: relative;
     top: var(--y);
     left: var(--x);
+
+    transform: translate(-50%, -50%);
+  }
+
+  .container > .other {
+    width: 32px;
+    height: 32px;
+
+    position: relative;
+    top: var(--y);
+    left: var(--x);
+
+    font-weight: 600;
+
+    color: #000;
+    background-color: #fff;
+
+    border: 2px solid #000;
 
     transform: translate(-50%, -50%);
   }
