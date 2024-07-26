@@ -148,7 +148,7 @@
   >
     {Object.keys(data).findIndex((key) => key === tabId.toString())}
   </button>
-  {#each Object.keys(points).filter(key => points[key].x >= data[tabId].window.x && points[key].x < data[tabId].window.x + data[tabId].window.width && points[key].y >= data[tabId].window.y && points[key].y < data[tabId].window.y + data[tabId].window.height) as pointKey
+  {#each Object.keys(points).filter(key => points[key].x >= data[tabId].window.x - 16 && points[key].x < data[tabId].window.x + data[tabId].window.width + 16 && points[key].y >= data[tabId].window.y - 16 && points[key].y < data[tabId].window.y + data[tabId].window.height + 16) as pointKey
   }
     <div
       class="other"
