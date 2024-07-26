@@ -41,7 +41,7 @@
     interval = setInterval(() => {
       clear();
       draw();
-    }, 50);
+    }, 0);
 	});
 
   const handleSize = () => {
@@ -61,22 +61,28 @@
     canvas.height = h * 4;
     context.lineWidth = 8;
 
+    let donePoints: string[] = [];
+
     Object.keys(points).forEach((pointKey) => {
       Object.keys(points).filter((key) => key !== pointKey).forEach((key) => {
-        context.strokeStyle = "#000";
-        context.setLineDash([0, 0]);
+        if (!donePoints.includes(key)) {
+          context.strokeStyle = "#000";
+          context.setLineDash([0, 0]);
 
-        if (pointKey !== tabId.toString() && key !== tabId.toString()) {
-          context.strokeStyle = "#ccc";
-          context.setLineDash([15, 10]);
+          if (pointKey !== tabId.toString() && key !== tabId.toString()) {
+            context.strokeStyle = "#ccc";
+            context.setLineDash([15, 10]);
+          }
+
+          context.beginPath();
+          context.moveTo((points[pointKey].x - data[tabId].window.x) * 4, (points[pointKey].y - data[tabId].window.y) * 4);
+          context.lineTo((points[key].x - data[tabId].window.x) * 4, (points[key].y - data[tabId].window.y) * 4);
+          context.stroke();
+          context.closePath();
         }
-
-        context.beginPath();
-        context.moveTo((points[pointKey].x - data[tabId].window.x) * 4, (points[pointKey].y - data[tabId].window.y) * 4);
-        context.lineTo((points[key].x - data[tabId].window.x) * 4, (points[key].y - data[tabId].window.y) * 4);
-        context.stroke();
-        context.closePath();
       });
+      
+      donePoints.push(pointKey);
     });
   }
 

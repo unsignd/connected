@@ -54,7 +54,7 @@
       }, {} as { [key: string]: { x: number, y: number } });
 
       update();
-    }, 50);
+    }, 0);
   });
 
   const update = () => {
@@ -125,10 +125,6 @@
         }, {})
       }));
     }
-
-    if (interval) {
-      clearInterval(interval);
-    }
   }
 </script>
 
@@ -183,6 +179,8 @@
     position: absolute;
     top: var(--y);
     left: var(--x);
+
+    border-style: solid;
 
     z-index: 1;
   }
