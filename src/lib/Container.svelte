@@ -100,9 +100,22 @@
   const drag = (event: MouseEvent) => {
     if (isDragging) {
       dragPosition = {
-        x: event.clientX,
-        y: event.clientY,
+        x: Math.max(16, Math.min(data[tabId].window.width - 16, event.clientX)),
+        y: Math.max(16, Math.min(data[tabId].window.height - 16, event.clientY)),
       }
+    }
+  }
+
+  const mouseDown = (event: MouseEvent) => {
+    console.log(event.clientX);
+    console.log(data[tabId].point.x);
+
+    if (event.clientX >= data[tabId].point.x - 16
+      && event.clientX <= data[tabId].point.x + 16
+      && event.clientY >= data[tabId].point.y - 16
+      && event.clientY < data[tabId].point.y + 16
+    ) {
+      isDragging = true;
     }
   }
 
@@ -135,17 +148,14 @@
 <svelte:window 
   on:resize={update}
   on:beforeunload={unload}
+  on:mousedown={mouseDown}
   on:mousemove={drag}
+  on:mouseup={() => isDragging = false}
 />
 
 <div class="container">
   <button
     class="point"
-    on:mousedown={() => isDragging = true}
-    on:mouseup={() => {
-      console.log('aa')
-      isDragging = false;
-    }}
     style="--x: {dragPosition.x ? dragPosition.x - 16 + 'px' : 'calc(50% - 16px)'}; --y: {dragPosition.y ? dragPosition.y - 16 + 'px' : 'calc(50% - 16px)'}"
   >
     {Object.keys(data).findIndex((key) => key === tabId.toString())}
