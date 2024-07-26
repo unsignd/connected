@@ -125,6 +125,10 @@
         }, {})
       }));
     }
+
+    if (interval) {
+      clearInterval(interval);
+    }
   }
 </script>
 
