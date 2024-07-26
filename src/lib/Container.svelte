@@ -59,6 +59,8 @@
 
   const update = () => {
     const {x, y} = document.getElementsByClassName('point')[0].getBoundingClientRect();
+    const prevData = data;
+
     load();
 
     if (data) {
@@ -77,7 +79,11 @@
           }
         }
       }));
+    } else if (!prevData) {
+      window.close();
     } else {
+      alert('aa')
+
       localStorage.setItem('data', JSON.stringify({
         [tabId]: {
           window: {
@@ -107,9 +113,6 @@
   }
 
   const mouseDown = (event: MouseEvent) => {
-    console.log(event.clientX);
-    console.log(data[tabId].point.x);
-
     if (event.clientX >= data[tabId].point.x - 16
       && event.clientX <= data[tabId].point.x + 16
       && event.clientY >= data[tabId].point.y - 16

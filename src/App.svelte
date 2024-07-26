@@ -6,8 +6,8 @@
   <header class="header">
     <p class="title">./connected</p>
     <div class="group">
-      <button>Add New Window</button>
-      <button>Clear Data</button>
+      <button on:click={() => window.open(document.URL, '_blank')}>add new point</button>
+      <button on:click={() => localStorage.removeItem('data')}>clear data</button>
     </div>
   </header>
   <Container />
