@@ -45,7 +45,6 @@
 
     interval = setInterval(() => {
       points = Object.keys(data)
-      .filter(key => key !== tabId.toString())
       .reduce((acc, key) => {
         acc[key] = {
           x: data[key].point.x + data[key].window.x,
@@ -142,13 +141,16 @@
 <div class="container">
   <button
     class="point"
-    on:mousedown={() => (isDragging = true)}
-    on:mouseup={() => (isDragging = false)}
-    style="--x: {dragPosition.x ? dragPosition.x + 'px' : '50%'}; --y: {dragPosition.y ? dragPosition.y + 'px' : '50%'}"
+    on:mousedown={() => isDragging = true}
+    on:mouseup={() => {
+      console.log('aa')
+      isDragging = false;
+    }}
+    style="--x: {dragPosition.x ? dragPosition.x - 16 + 'px' : 'calc(50% - 16px)'}; --y: {dragPosition.y ? dragPosition.y - 16 + 'px' : 'calc(50% - 16px)'}"
   >
     {Object.keys(data).findIndex((key) => key === tabId.toString())}
   </button>
-  {#each Object.keys(points).filter(key => points[key].x >= data[tabId].window.x - 16 && points[key].x < data[tabId].window.x + data[tabId].window.width + 16 && points[key].y >= data[tabId].window.y - 16 && points[key].y < data[tabId].window.y + data[tabId].window.height + 16) as pointKey
+  {#each Object.keys(points).filter(key => key !== tabId.toString()).filter(key => points[key].x >= data[tabId].window.x - 16 && points[key].x < data[tabId].window.x + data[tabId].window.width + 16 && points[key].y >= data[tabId].window.y - 16 && points[key].y < data[tabId].window.y + data[tabId].window.height + 16) as pointKey
   }
     <div
       class="other"
@@ -182,7 +184,7 @@
     top: var(--y);
     left: var(--x);
 
-    transform: translate(-50%, -50%);
+    z-index: 1;
   }
 
   .container > .other {
@@ -199,10 +201,10 @@
 
     font-weight: 600;
 
-    color: #000;
+    color: #ccc;
     background-color: #fff;
 
-    border: 2px dashed #000;
+    border: 2px dashed #ccc;
 
     transform: translate(-50%, -50%);
   }

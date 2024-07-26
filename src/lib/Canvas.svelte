@@ -59,15 +59,24 @@
   const draw = () => {
     canvas.width = w * 4;
     canvas.height = h * 4;
-    context.fillStyle = "#000";
     context.lineWidth = 8;
 
-    Object.keys(points).forEach(key => {
-      context.beginPath();
-      context.moveTo(data[tabId.toString()].point.x * 4, data[tabId.toString()].point.y * 4);
-      context.lineTo((points[key].x - data[tabId.toString()].window.x) * 4, (points[key].y - data[tabId.toString()].window.y) * 4);
-      context.stroke();
-      context.closePath();
+    Object.keys(points).forEach((pointKey) => {
+      Object.keys(points).filter((key) => key !== pointKey).forEach((key) => {
+        context.strokeStyle = "#000";
+        context.setLineDash([0, 0]);
+
+        if (pointKey !== tabId.toString() && key !== tabId.toString()) {
+          context.strokeStyle = "#ccc";
+          context.setLineDash([15, 10]);
+        }
+
+        context.beginPath();
+        context.moveTo((points[pointKey].x - data[tabId].window.x) * 4, (points[pointKey].y - data[tabId].window.y) * 4);
+        context.lineTo((points[key].x - data[tabId].window.x) * 4, (points[key].y - data[tabId].window.y) * 4);
+        context.stroke();
+        context.closePath();
+      });
     });
   }
 
