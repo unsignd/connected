@@ -140,9 +140,22 @@
 />
 
 <div class="container">
-  <button class="point" on:mousedown={() => isDragging = true} on:mouseup={() => isDragging = false} style="--x: {dragPosition.x ? dragPosition.x + 'px' : '50%'}; --y: {dragPosition.y ? dragPosition.y + 'px' : '50%'}">{Object.keys(data).findIndex(key => key === tabId.toString())}</button>
-  {#each Object.keys(points).filter(key => points[key].x >= data[tabId].window.x && points[key].x < data[tabId].window.x + data[tabId].window.width) as key}
-    <div class="other">{Object.keys(data).findIndex(key => key === tabId.toString())}</div>
+  <button
+    class="point"
+    on:mousedown={() => (isDragging = true)}
+    on:mouseup={() => (isDragging = false)}
+    style="--x: {dragPosition.x ? dragPosition.x + 'px' : '50%'}; --y: {dragPosition.y ? dragPosition.y + 'px' : '50%'}"
+  >
+    {Object.keys(data).findIndex((key) => key === tabId.toString())}
+  </button>
+  {#each Object.keys(points).filter(key => points[key].x >= data[tabId].window.x && points[key].x < data[tabId].window.x + data[tabId].window.width && points[key].y >= data[tabId].window.y && points[key].y < data[tabId].window.y + data[tabId].window.height) as pointKey
+  }
+    <div
+      class="other"
+      style="--x: {points[pointKey].x - data[tabId].window.x}px; --y: {points[pointKey].y - data[tabId].window.y}px;"
+    >
+      {Object.keys(data).findIndex((key) => key === pointKey.toString())}
+    </div>
   {/each}
   {#if tabId && data}
     <Canvas bind:tabId={tabId} bind:data={data} bind:points={points}/>
@@ -165,7 +178,7 @@
     width: 32px;
     height: 32px;
 
-    position: relative;
+    position: absolute;
     top: var(--y);
     left: var(--x);
 
@@ -176,16 +189,20 @@
     width: 32px;
     height: 32px;
 
-    position: relative;
+    position: absolute;
     top: var(--y);
     left: var(--x);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     font-weight: 600;
 
     color: #000;
     background-color: #fff;
 
-    border: 2px solid #000;
+    border: 2px dashed #000;
 
     transform: translate(-50%, -50%);
   }
