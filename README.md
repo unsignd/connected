@@ -15,7 +15,4 @@ Live Demo](https://connected.untourable.uk)
 
 ## Demo
 
-
-
 https://github.com/user-attachments/assets/2044acfe-3521-413b-aa92-1e398a3657b2
-
