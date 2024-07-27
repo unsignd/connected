@@ -4,7 +4,7 @@
 
 [Github Repository
 ](https://github.com/unsignd/connected)&nbsp;&nbsp;[
-Live Demo](https://uuuui.vercel.app)
+Live Demo](https://connected.untourable.uk)
 
 </div>
 <br />
@@ -14,3 +14,5 @@ Live Demo](https://uuuui.vercel.app)
 <br/>
 
 ## Demo
+
+<video src='preview.mov' width=180/>
