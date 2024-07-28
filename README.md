@@ -2,9 +2,7 @@
 
 # connected<br />
 
-[Github Repository
-](https://github.com/unsignd/connected)&nbsp;&nbsp;[
-Live Demo](https://connected.untourable.uk)
+[Github Repository](https://github.com/unsignd/connected)&nbsp;&nbsp;[Live Demo](https://connected.untourable.uk)
 
 </div>
 <br />
